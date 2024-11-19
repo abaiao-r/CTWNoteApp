@@ -60,4 +60,24 @@ class NoteViewModel : ViewModel() {
             SortOption.ALPHABETICAL -> notes.sortedBy { it.title }
         }
     }
+
+    fun permanentlyDeleteNote(note: Note) {
+        notes = notes.filterNot { it.id == note.id }
+    }
+
+    fun markNoteAsDeleted(note: Note) {
+        notes = notes.map {
+            if (it.id == note.id) it.copy(isDeleted = true) else it
+        }
+    }
+
+    fun recoverNote(note: Note) {
+        notes = notes.map {
+            if (it.id == note.id) it.copy(isDeleted = false) else it
+        }
+    }
+
+    fun getActiveNotes(): List<Note> {
+        return notes.filter { !it.isDeleted }
+    }
 }

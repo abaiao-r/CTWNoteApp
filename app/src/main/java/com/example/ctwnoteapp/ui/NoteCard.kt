@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
@@ -32,6 +33,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+// app/src/main/java/com/example/ctwnoteapp/ui/NoteCard.kt
+
 @Composable
 fun NoteCard(
     modifier: Modifier = Modifier,
@@ -41,7 +44,9 @@ fun NoteCard(
     createdDate: Date,
     updatedDate: Date,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onRecover: () -> Unit,
+    isInTrash: Boolean
 ) {
     var expanded by remember { mutableStateOf(false) }
     val textColor = if (color.luminance() > 0.5) Color.Black else Color.White
@@ -72,11 +77,20 @@ fun NoteCard(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                IconButton(onClick = onEdit) {
-                    Icon(Icons.Filled.Edit, contentDescription = "Edit note", tint = textColor)
-                }
-                IconButton(onClick = onDelete) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Delete note", tint = textColor)
+                if (isInTrash) {
+                    IconButton(onClick = onRecover) {
+                        Icon(Icons.Default.AddCircle, contentDescription = "Recover note", tint = textColor)
+                    }
+                    IconButton(onClick = onDelete) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Permanently delete note", tint = textColor)
+                    }
+                } else {
+                    IconButton(onClick = onEdit) {
+                        Icon(Icons.Filled.Edit, contentDescription = "Edit note", tint = textColor)
+                    }
+                    IconButton(onClick = onDelete) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete note", tint = textColor)
+                    }
                 }
             }
         }
@@ -94,7 +108,28 @@ fun NoteCardPreview() {
             createdDate = Date(),
             updatedDate = Date(),
             onEdit = {},
-            onDelete = {}
+            onDelete = {},
+            onRecover = {},
+            isInTrash = false
+        )
+    }
+}
+
+// preview composable for NoteCard in TrashScreen
+@Preview(showBackground = true)
+@Composable
+fun NoteCardInTrashPreview() {
+    CTWNoteAppTheme {
+        NoteCard(
+            title = "Sample Title",
+            content = "Sample Content",
+            color = Color.Blue,
+            createdDate = Date(),
+            updatedDate = Date(),
+            onEdit = {},
+            onDelete = {},
+            onRecover = {},
+            isInTrash = true
         )
     }
 }

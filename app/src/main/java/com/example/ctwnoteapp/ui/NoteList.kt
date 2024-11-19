@@ -45,7 +45,9 @@ fun NoteList(
                     createdDate = note.createdDate,
                     updatedDate = note.updatedDate,
                     onEdit = { onEditNote(note) },
-                    onDelete = { onDeleteNote(note) }
+                    onDelete = { onDeleteNote(note) },
+                    onRecover = {},
+                    isInTrash = false
                 )
             }
         }

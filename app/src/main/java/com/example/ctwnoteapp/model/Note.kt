@@ -12,7 +12,8 @@ data class Note(
     val content: String,
     val createdDate: Date = Date(),
     var updatedDate: Date = Date(),
-    val color: Color = generateRandomColor()
+    val color: Color = generateRandomColor(),
+    var isDeleted: Boolean = false
 )
 
 enum class SortOption(val displayName: String) {

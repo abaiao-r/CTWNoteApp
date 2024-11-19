@@ -53,7 +53,7 @@ fun NoteInputFields(
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
                 .focusRequester(focusRequester),
-            maxLines = 1,
+            maxLines = 2,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Default,
             ),
@@ -69,7 +69,7 @@ fun NoteInputFields(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
                 .focusRequester(focusRequester),
-            maxLines = 5,
+            maxLines = 10,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Default,
                 keyboardType = KeyboardType.Text
