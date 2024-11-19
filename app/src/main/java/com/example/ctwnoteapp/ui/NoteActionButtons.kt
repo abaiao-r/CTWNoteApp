@@ -28,34 +28,15 @@ fun NoteActionButtons(
     title: String,
     content: String,
     editId: String?,
-    notes: List<Note>,
-    onSaveNote: (List<Note>, String?) -> Unit,
+    onSaveNote: () -> Unit,
     onShowClearDialog: () -> Unit,
     buttonColor: Color,
     buttonBorderColor: Color,
-    clearButtonColor: Color,
-    context: android.content.Context
+    clearButtonColor: Color
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Button(
-            onClick = {
-                if (title.isNotEmpty() && content.isNotEmpty()) {
-                    val newNotes = if (editId == null) {
-                        notes + Note(
-                            title = title,
-                            content = content
-                        )
-                    } else {
-                        notes.map { note ->
-                            if (note.id == editId) note.copy(title = title, content = content, updatedDate = Date())
-                            else note
-                        }
-                    }
-                    onSaveNote(newNotes, null)
-                } else {
-                    Toast.makeText(context, "Both fields must be filled!", Toast.LENGTH_SHORT).show()
-                }
-            },
+            onClick = onSaveNote,
             colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
             border = BorderStroke(1.dp, buttonBorderColor),
             shape = RoundedCornerShape(4.dp),
@@ -80,16 +61,14 @@ fun NoteActionButtons(
 fun NoteActionButtonsPreview() {
     CTWNoteAppTheme {
         NoteActionButtons(
-            title = "Sample Title",
-            content = "Sample Content",
-            editId = null,
-            notes = emptyList(),
-            onSaveNote = { _, _ -> },
+            title = "Title",
+            content = "Content",
+            editId = "1",
+            onSaveNote = {},
             onShowClearDialog = {},
             buttonColor = MaterialTheme.colorScheme.primary,
             buttonBorderColor = MaterialTheme.colorScheme.onPrimary,
-            clearButtonColor = MaterialTheme.colorScheme.secondary,
-            context = LocalContext.current
+            clearButtonColor = MaterialTheme.colorScheme.secondary
         )
     }
 }

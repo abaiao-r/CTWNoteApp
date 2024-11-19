@@ -23,6 +23,7 @@ fun NoteApp(
 
     Box(modifier = modifier.fillMaxSize()) {
         Banner()
+
         Column(modifier = Modifier.padding(16.dp).padding(top = 48.dp)) {
             NoteInputFields(
                 title = viewModel.title,
@@ -34,18 +35,11 @@ fun NoteApp(
                 title = viewModel.title,
                 content = viewModel.content,
                 editId = viewModel.editId,
-                notes = viewModel.notes,
-                onSaveNote = { newNotes, newEditId ->
-                    viewModel.notes = newNotes
-                    viewModel.editId = newEditId
-                    viewModel.title = ""
-                    viewModel.content = ""
-                },
+                onSaveNote = { viewModel.saveNote(context) },
                 onShowClearDialog = { viewModel.showClearDialog = true },
                 buttonColor = buttonColor,
                 buttonBorderColor = buttonBorderColor,
-                clearButtonColor = clearButtonColor,
-                context = context
+                clearButtonColor = clearButtonColor
             )
             if (viewModel.showClearDialog) {
                 ClearConfirmationDialog(
