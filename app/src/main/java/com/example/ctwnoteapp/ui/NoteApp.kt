@@ -4,6 +4,7 @@ package com.example.ctwnoteapp.ui
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,6 +78,16 @@ fun NoteApp(
                 onDeleteNote = { viewModel.noteToDelete = it }
             )
         }
+        NoteAddButton(
+            onClick = {
+                viewModel.title = ""
+                viewModel.content = ""
+                viewModel.editId = null
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+        )
     }
 }
 
