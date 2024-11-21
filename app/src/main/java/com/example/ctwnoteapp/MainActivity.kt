@@ -353,6 +353,7 @@
 //import kotlin.random.Random
 
 // app/src/main/java/com/example/ctwnoteapp/MainActivity.kt
+// MainActivity.kt
 package com.example.ctwnoteapp
 
 import android.os.Bundle
@@ -360,12 +361,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.navigation.compose.rememberNavController
+import com.example.ctwnoteapp.model.NoteDatabase
+import com.example.ctwnoteapp.model.NoteRepository
 import com.example.ctwnoteapp.ui.NavGraph
 import com.example.ctwnoteapp.ui.theme.CTWNoteAppTheme
 import com.example.ctwnoteapp.viewmodel.NoteViewModel
+import com.example.ctwnoteapp.viewmodel.NoteViewModelFactory
 
 class MainActivity : ComponentActivity() {
-    private val noteViewModel: NoteViewModel by viewModels()
+    private val noteViewModel: NoteViewModel by viewModels {
+        val noteDao = NoteDatabase.getDatabase(applicationContext).noteDao()
+        val repository = NoteRepository(noteDao)
+        NoteViewModelFactory(repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

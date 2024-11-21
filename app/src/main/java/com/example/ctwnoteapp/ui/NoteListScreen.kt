@@ -15,11 +15,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.ctwnoteapp.model.Note
+import com.example.ctwnoteapp.model.NoteDatabase
+import com.example.ctwnoteapp.model.NoteRepository
 import com.example.ctwnoteapp.ui.theme.CTWNoteAppTheme
 import com.example.ctwnoteapp.viewmodel.NoteViewModel
 
@@ -72,11 +75,14 @@ fun NoteListScreen(navController: NavHostController, viewModel: NoteViewModel) {
     }
 }
 
+// NoteListScreen.kt
 @Preview(showBackground = true)
 @Composable
 fun NoteListScreenPreview() {
-    val navController = rememberNavController()
-    val viewModel = NoteViewModel().apply {
+    val context = LocalContext.current
+    val noteDao = NoteDatabase.getDatabase(context).noteDao()
+    val repository = NoteRepository(noteDao)
+    val viewModel = NoteViewModel(repository).apply {
         notes = listOf(
             Note(
                 title = "Sample Note 1",
@@ -89,6 +95,6 @@ fun NoteListScreenPreview() {
         )
     }
     CTWNoteAppTheme {
-        NoteListScreen(navController = navController, viewModel = viewModel)
+        NoteListScreen(navController = rememberNavController(), viewModel = viewModel)
     }
 }

@@ -46,13 +46,17 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
         }
     }
+
+
 }
 
 dependencies {
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    implementation(libs.identity.jvm)
+    kapt ("androidx.room:room-compiler:2.5.0")
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)

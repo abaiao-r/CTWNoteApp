@@ -20,6 +20,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.ctwnoteapp.model.NoteDatabase
+import com.example.ctwnoteapp.model.NoteRepository
 import com.example.ctwnoteapp.ui.theme.CTWNoteAppTheme
 import com.example.ctwnoteapp.viewmodel.NoteViewModel
 
@@ -71,11 +73,16 @@ fun NoteInputScreen(navController: NavHostController, viewModel: NoteViewModel, 
 @Preview(showBackground = true)
 @Composable
 fun NoteInputScreenPreview() {
+    val context = LocalContext.current
+    val noteDao = NoteDatabase.getDatabase(context).noteDao()
+    val repository = NoteRepository(noteDao)
+    val viewModel = NoteViewModel(repository)
+
     CTWNoteAppTheme {
         NoteInputScreen(
-            navController = NavHostController(LocalContext.current),
-            viewModel = NoteViewModel(),
-            context = LocalContext.current
+            navController = NavHostController(context),
+            viewModel = viewModel,
+            context = context
         )
     }
 }

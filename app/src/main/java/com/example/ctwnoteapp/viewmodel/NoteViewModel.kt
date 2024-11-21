@@ -1,15 +1,19 @@
-// app/src/main/java/com/example/ctwnoteapp/viewmodel/NoteViewModel.kt
+// NoteViewModel.kt
 package com.example.ctwnoteapp.viewmodel
 
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.android.identity.util.UUID
 import com.example.ctwnoteapp.model.Note
+import com.example.ctwnoteapp.model.NoteRepository
 import com.example.ctwnoteapp.model.SortOption
+import kotlinx.coroutines.launch
 import java.util.Date
 
-class NoteViewModel : ViewModel() {
+class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     var title by mutableStateOf("")
     var content by mutableStateOf("")
     var notes by mutableStateOf<List<Note>>(emptyList())
@@ -19,24 +23,37 @@ class NoteViewModel : ViewModel() {
     var expanded by mutableStateOf(false)
     var noteToDelete by mutableStateOf<Note?>(null)
 
+    init {
+        loadNotes()
+    }
+
+    private fun loadNotes() {
+        viewModelScope.launch {
+            notes = repository.getAllNotes()
+        }
+    }
+
     fun saveNote(context: Context) {
-        if (title.isNotEmpty() && content.isNotEmpty()) {
-            if (editId == null) {
-                notes = notes + Note(
+        viewModelScope.launch {
+            if (title.isNotEmpty() && content.isNotEmpty()) {
+                val note = Note(
+                    id = editId ?: UUID.randomUUID().toString(),
                     title = title,
-                    content = content
+                    content = content,
+                    createdDate = if (editId == null) Date() else notes.find { it.id == editId }?.createdDate ?: Date(),
+                    updatedDate = Date()
                 )
-            } else {
-                notes = notes.map { note ->
-                    if (note.id == editId) note.copy(title = title, content = content, updatedDate = Date())
-                    else note
+                if (editId == null) {
+                    repository.insert(note)
+                } else {
+                    repository.update(note)
                 }
-                editId = null
+                loadNotes()
+                clearFields()
+                Toast.makeText(context, "Note saved", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Title and content cannot be empty", Toast.LENGTH_SHORT).show()
             }
-            title = ""
-            content = ""
-        } else {
-            Toast.makeText(context, "Both fields must be filled!", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -47,9 +64,26 @@ class NoteViewModel : ViewModel() {
     }
 
     fun deleteNote() {
-        noteToDelete?.let { note ->
-            notes = notes.filterNot { it.id == note.id }
-            noteToDelete = null
+        viewModelScope.launch {
+            noteToDelete?.let { note ->
+                repository.markNoteAsDeleted(note.id)
+                loadNotes()
+                noteToDelete = null
+            }
+        }
+    }
+
+    fun permanentlyDeleteNote(note: Note) {
+        viewModelScope.launch {
+            repository.permanentlyDeleteNoteById(note.id)
+            loadNotes()
+        }
+    }
+
+    fun recoverNote(note: Note) {
+        viewModelScope.launch {
+            repository.recoverNoteById(note.id)
+            loadNotes()
         }
     }
 
@@ -61,23 +95,14 @@ class NoteViewModel : ViewModel() {
         }
     }
 
-    fun permanentlyDeleteNote(note: Note) {
-        notes = notes.filterNot { it.id == note.id }
+    fun getActiveNotes(): List<Note> {
+        return notes.filter { !it.isDeleted }
     }
 
     fun markNoteAsDeleted(note: Note) {
-        notes = notes.map {
-            if (it.id == note.id) it.copy(isDeleted = true) else it
+        viewModelScope.launch {
+            repository.markNoteAsDeleted(note.id)
+            loadNotes()
         }
-    }
-
-    fun recoverNote(note: Note) {
-        notes = notes.map {
-            if (it.id == note.id) it.copy(isDeleted = false) else it
-        }
-    }
-
-    fun getActiveNotes(): List<Note> {
-        return notes.filter { !it.isDeleted }
     }
 }
