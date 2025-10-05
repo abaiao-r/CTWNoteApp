@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.google.ksp)
 }
 
 android {
@@ -41,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
@@ -56,7 +56,7 @@ android {
 dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.identity.jvm)
-    kapt ("androidx.room:room-compiler:2.5.0")
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
