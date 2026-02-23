@@ -9,7 +9,7 @@ import com.example.ctwnoteapp.model.Note
 import com.example.ctwnoteapp.ui.theme.CTWNoteAppTheme
 
 @Composable
-fun DeleteConfirmationDialog(note: com.example.ctwnoteapp.model.Note, onDelete: () -> Unit, onDismiss: () -> Unit) {
+fun DeleteConfirmationDialog(@Suppress("UNUSED_PARAMETER") note: com.example.ctwnoteapp.model.Note, onDelete: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {

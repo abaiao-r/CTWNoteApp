@@ -13,7 +13,7 @@ import com.example.ctwnoteapp.viewmodel.NoteViewModel
 
 @Composable
 fun NoteApp(
-    modifier: Modifier = Modifier,
+    @Suppress("UNUSED_PARAMETER") modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: NoteViewModel
 ) {

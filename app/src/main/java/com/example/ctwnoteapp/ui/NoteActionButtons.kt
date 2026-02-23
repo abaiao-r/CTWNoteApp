@@ -25,8 +25,8 @@ import java.util.Date
 
 @Composable
 fun NoteActionButtons(
-    title: String,
-    content: String,
+    @Suppress("UNUSED_PARAMETER") title: String,
+    @Suppress("UNUSED_PARAMETER") content: String,
     editId: String?,
     onSaveNote: () -> Unit,
     onShowClearDialog: () -> Unit,
